@@ -23,8 +23,8 @@ class SerialBridge(Node):
 
         self.declare_parameter('serial_port', '/dev/ttyUSB0')
         self.declare_parameter('baud', 115200)
-        self.declare_parameter('wheel_radius', 0.0835)      # m — measure your wheel, this is a placeholder
-        self.declare_parameter('wheel_separation', 0.42)    # m — track width, measure and set
+        self.declare_parameter('wheel_radius', 0.0762)      # m — measure your wheel, this is a placeholder
+        self.declare_parameter('wheel_separation', 0.41)    # m — track width, measure and set
         self.declare_parameter('ticks_per_rev', 60)          # pole_pairs(10) * 6
         self.declare_parameter('max_speed_mps', 1.0)         # real speed at frac == 1.0, calibrate by testing
         self.declare_parameter('publish_tf', True)           # set False if robot_localization publishes odom->base_link
