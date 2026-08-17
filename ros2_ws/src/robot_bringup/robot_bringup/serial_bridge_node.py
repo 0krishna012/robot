@@ -21,7 +21,7 @@ class SerialBridge(Node):
     def __init__(self):
         super().__init__('serial_bridge')
 
-        self.declare_parameter('serial_port', '/dev/ttyUSB0')
+        self.declare_parameter('serial_port', '/dev/ttyUSB1')
         self.declare_parameter('baud', 115200)
         self.declare_parameter('wheel_radius', 0.0762)      # m — measure your wheel, this is a placeholder
         self.declare_parameter('wheel_separation', 0.41)    # m — track width, measure and set

@@ -14,9 +14,9 @@ def generate_launch_description():
     lidar_port = LaunchConfiguration('lidar_port')
 
     return LaunchDescription([
-        DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB0',
+        DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB1',
                                description='ESP32 serial port'),
-        DeclareLaunchArgument('lidar_port', default_value='/dev/ttyUSB1',
+        DeclareLaunchArgument('lidar_port', default_value='/dev/ttyUSB0',
                                description='RPLIDAR A1 serial port'),
 
         Node(
