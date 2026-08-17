@@ -31,13 +31,6 @@ def generate_launch_description():
         ),
 
         Node(
-            package='robot_bringup',
-            executable='imu_node',
-            name='mpu6050_node',
-            output='screen',
-        ),
-
-        Node(
             package='robot_localization',
             executable='ekf_node',
             name='ekf_filter_node',

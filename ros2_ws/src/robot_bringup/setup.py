@@ -23,7 +23,6 @@ setup(
     entry_points={
         'console_scripts': [
             'serial_bridge_node = robot_bringup.serial_bridge_node:main',
-            'imu_node = robot_bringup.imu_node:main',
         ],
     },
 )

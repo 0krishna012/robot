@@ -9,6 +9,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Twist, TransformStamped
 from nav_msgs.msg import Odometry
+from sensor_msgs.msg import Imu
 from tf2_ros import TransformBroadcaster
 import serial
 
@@ -30,6 +31,7 @@ class SerialBridge(Node):
         self.declare_parameter('publish_tf', True)           # set False if robot_localization publishes odom->base_link
         self.declare_parameter('odom_frame', 'odom')
         self.declare_parameter('base_frame', 'base_link')
+        self.declare_parameter('imu_frame', 'imu_link')
 
         self.port = self.get_parameter('serial_port').value
         self.baud = self.get_parameter('baud').value
@@ -40,6 +42,7 @@ class SerialBridge(Node):
         self.publish_tf = self.get_parameter('publish_tf').value
         self.odom_frame = self.get_parameter('odom_frame').value
         self.base_frame = self.get_parameter('base_frame').value
+        self.imu_frame = self.get_parameter('imu_frame').value
 
         self.x = 0.0
         self.y = 0.0
@@ -49,6 +52,7 @@ class SerialBridge(Node):
         time.sleep(2.0)  # let the ESP32 finish its reset after the port opens
 
         self.odom_pub = self.create_publisher(Odometry, 'odom', QoSProfile(depth=10))
+        self.imu_pub = self.create_publisher(Imu, 'imu/data_raw', QoSProfile(depth=10))
         self.tf_broadcaster = TransformBroadcaster(self)
         self.cmd_sub = self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_cb, 10)
 
@@ -88,7 +92,15 @@ class SerialBridge(Node):
 
     def handle_line(self, line: str):
         parts = line.split()
-        if len(parts) != 4 or parts[0] != 'E':
+        if not parts:
+            return
+        if parts[0] == 'E':
+            self.handle_encoder_line(parts)
+        elif parts[0] == 'I':
+            self.handle_imu_line(parts)
+
+    def handle_encoder_line(self, parts):
+        if len(parts) != 4:
             return
         try:
             dl = int(parts[1])
@@ -144,6 +156,26 @@ class SerialBridge(Node):
             t.transform.rotation.z = q[2]
             t.transform.rotation.w = q[3]
             self.tf_broadcaster.sendTransform(t)
+
+    def handle_imu_line(self, parts):
+        if len(parts) != 7:
+            return
+        try:
+            ax, ay, az, gx, gy, gz = (float(p) for p in parts[1:])
+        except ValueError:
+            return
+
+        msg = Imu()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = self.imu_frame
+        msg.linear_acceleration.x = ax
+        msg.linear_acceleration.y = ay
+        msg.linear_acceleration.z = az
+        msg.angular_velocity.x = gx
+        msg.angular_velocity.y = gy
+        msg.angular_velocity.z = gz
+        msg.orientation_covariance[0] = -1.0  # no orientation estimate provided by this driver
+        self.imu_pub.publish(msg)
 
     def destroy_node(self):
         self._stop = True
