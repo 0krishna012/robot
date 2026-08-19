@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<robot name="hub_motor_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- All measurements below come from the robot's physical/CAD spec sheet.
+       All z values are heights above base_footprint (the ground plane);
+       base_link is defined to coincide with base_footprint (see joint below).
+       NOTE: wheel_radius here (0.085) is the physical/CAD value. It is
+       intentionally NOT the same as WHEEL_RADIUS in serial_bridge_node.py
+       (0.08255), which is used for odometry tick scaling and was left
+       untouched per instructions; the two should eventually be reconciled,
+       but that's a code change, not a URDF one. -->
+
+  <!-- == Body & plates == -->
+  <xacro:property name="body_length"     value="0.520"/>
+  <xacro:property name="body_width"      value="0.435"/>
+  <xacro:property name="body_height"     value="0.175"/>
+  <xacro:property name="plate_thickness" value="0.003"/>
+  <xacro:property name="lower_plate_z"   value="0.060"/>
+  <xacro:property name="plate_gap"       value="0.110"/>
+  <xacro:property name="upper_plate_z"   value="${lower_plate_z + plate_gap}"/>
+  <xacro:property name="plate_mass"      value="2.0"/>
+
+  <!-- == Standoffs (plate spacers) == -->
+  <xacro:property name="standoff_size"     value="0.025"/>
+  <xacro:property name="standoff_length"   value="0.160"/>
+  <xacro:property name="standoff_x_front"  value="0.220"/>
+  <xacro:property name="standoff_y_front"  value="0.1925"/>
+  <xacro:property name="standoff_x_rear"   value="-0.080"/>
+  <xacro:property name="standoff_y_rear"   value="0.135"/>
+  <xacro:property name="standoff_z"        value="${(lower_plate_z + upper_plate_z) / 2.0}"/>
+
+  <!-- == Drive wheels == -->
+  <xacro:property name="wheel_radius"     value="0.085"/>
+  <xacro:property name="wheel_thickness"  value="0.050"/>
+  <xacro:property name="wheel_mass"       value="1.5"/>
+  <xacro:property name="wheel_x_offset"   value="0.055"/>
+  <xacro:property name="wheel_separation" value="0.395"/>
+
+  <!-- == Rear casters == -->
+  <xacro:property name="caster_wheel_radius" value="0.030"/>
+  <xacro:property name="caster_wheel_mass"   value="0.080"/>
+  <xacro:property name="caster_x"            value="-0.160"/>
+  <xacro:property name="caster_y"            value="0.135"/>
+  <xacro:property name="caster_trail"        value="0.012"/>
+
+  <!-- == Sensors == -->
+  <xacro:property name="lidar_x"                  value="0.1375"/>
+  <xacro:property name="lidar_radius"             value="0.038"/>
+  <xacro:property name="lidar_height_dim"         value="0.041"/>
+  <xacro:property name="lidar_mass"               value="0.190"/>
+  <xacro:property name="lidar_top_above_lower"    value="0.130"/>
+  <xacro:property name="lidar_z"
+                   value="${lower_plate_z + lidar_top_above_lower - lidar_height_dim / 2.0}"/>
+
+  <xacro:property name="camera_size_x" value="0.025"/>
+  <xacro:property name="camera_size_y" value="0.090"/>
+  <xacro:property name="camera_size_z" value="0.025"/>
+  <xacro:property name="camera_x"      value="${lidar_x + 0.120}"/>
+
+  <material name="chassis_grey">
+    <color rgba="0.55 0.55 0.55 1.0"/>
+  </material>
+  <material name="wheel_black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <material name="sensor_orange">
+    <color rgba="0.9 0.5 0.1 1.0"/>
+  </material>
+  <material name="standoff_dark">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+
+  <!-- base_footprint: ground-projected origin, ties to odom via serial_bridge_node's TF -->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- base_link: pure reference frame - the physical body is the two plates below -->
+  <link name="base_link"/>
+
+  <!-- == Chassis plates == -->
+  <xacro:macro name="chassis_plate" params="name z">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <box size="${body_length} ${body_width} ${plate_thickness}"/>
+        </geometry>
+        <material name="chassis_grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${body_length} ${body_width} ${plate_thickness}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${plate_mass}"/>
+        <inertia ixx="0.04" ixy="0" ixz="0" iyy="0.06" iyz="0" izz="0.10"/>
+      </inertial>
+    </link>
+
+    <joint name="base_link_to_${name}" type="fixed">
+      <parent link="base_link"/>
+      <child link="${name}"/>
+      <origin xyz="0 0 ${z}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:chassis_plate name="lower_plate" z="${lower_plate_z}"/>
+  <xacro:chassis_plate name="upper_plate" z="${upper_plate_z}"/>
+
+  <!-- == Standoffs connecting the two plates == -->
+  <xacro:macro name="standoff" params="name x y">
+    <link name="standoff_${name}">
+      <visual>
+        <geometry>
+          <box size="${standoff_size} ${standoff_size} ${standoff_length}"/>
+        </geometry>
+        <material name="standoff_dark"/>
+      </visual>
+    </link>
+
+    <joint name="base_link_to_standoff_${name}" type="fixed">
+      <parent link="base_link"/>
+      <child link="standoff_${name}"/>
+      <origin xyz="${x} ${y} ${standoff_z}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:standoff name="front_left"  x="${standoff_x_front}" y="${standoff_y_front}"/>
+  <xacro:standoff name="front_right" x="${standoff_x_front}" y="${-standoff_y_front}"/>
+  <xacro:standoff name="rear_left"   x="${standoff_x_rear}"  y="${standoff_y_rear}"/>
+  <xacro:standoff name="rear_right"  x="${standoff_x_rear}"  y="${-standoff_y_rear}"/>
+
+  <!-- == Drive wheels == -->
+  <xacro:macro name="wheel" params="name y_offset">
+    <link name="${name}_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
+        </geometry>
+        <material name="wheel_black"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_thickness}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wheel_mass}"/>
+        <inertia ixx="0.002" ixy="0" ixz="0" iyy="0.002" iyz="0" izz="0.002"/>
+      </inertial>
+    </link>
+
+    <joint name="base_link_to_${name}_wheel" type="continuous">
+      <parent link="base_link"/>
+      <child link="${name}_wheel"/>
+      <origin xyz="${wheel_x_offset} ${y_offset} ${wheel_radius}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel name="left"  y_offset="${wheel_separation / 2.0}"/>
+  <xacro:wheel name="right" y_offset="${-wheel_separation / 2.0}"/>
+
+  <!-- == Rear casters (simplified as fixed balls - no swivel joint modeled) == -->
+  <xacro:macro name="caster" params="name y">
+    <link name="caster_${name}">
+      <visual>
+        <geometry>
+          <sphere radius="${caster_wheel_radius}"/>
+        </geometry>
+        <material name="wheel_black"/>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="${caster_wheel_radius}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${caster_wheel_mass}"/>
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+      </inertial>
+    </link>
+
+    <joint name="base_link_to_caster_${name}" type="fixed">
+      <parent link="base_link"/>
+      <child link="caster_${name}"/>
+      <origin xyz="${caster_x - caster_trail} ${y} ${caster_wheel_radius}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:caster name="left"  y="${caster_y}"/>
+  <xacro:caster name="right" y="${-caster_y}"/>
+
+  <!-- == Lidar == -->
+  <link name="laser_frame">
+    <visual>
+      <geometry>
+        <cylinder radius="${lidar_radius}" length="${lidar_height_dim}"/>
+      </geometry>
+      <material name="chassis_grey"/>
+    </visual>
+    <inertial>
+      <mass value="${lidar_mass}"/>
+      <inertia ixx="0.00005" ixy="0" ixz="0" iyy="0.00005" iyz="0" izz="0.00005"/>
+    </inertial>
+  </link>
+
+  <joint name="base_link_to_laser" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_frame"/>
+    <origin xyz="${lidar_x} 0 ${lidar_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- == Camera == -->
+  <!-- Only x-offset (relative to lidar) was given; y/z are assumed centered
+       and co-planar with the lidar mount until measured. -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="${camera_size_x} ${camera_size_y} ${camera_size_z}"/>
+      </geometry>
+      <material name="sensor_orange"/>
+    </visual>
+  </link>
+
+  <joint name="base_link_to_camera" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="${camera_x} 0 ${lidar_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- == IMU (MPU6050, physically wired to the ESP32's I2C pins) == -->
+  <!-- Mounting position wasn't in the measurement sheet - placed on the
+       lower plate centerline as a placeholder until measured. -->
+  <link name="imu_link">
+    <visual>
+      <geometry>
+        <box size="0.02 0.02 0.005"/>
+      </geometry>
+      <material name="sensor_orange"/>
+    </visual>
+  </link>
+
+  <joint name="base_link_to_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 ${lower_plate_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Ultrasonic sensors intentionally omitted: not in use / not yet mounted. -->
+
+</robot>

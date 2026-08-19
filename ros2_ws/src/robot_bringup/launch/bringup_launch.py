@@ -1,23 +1,42 @@
 import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('robot_bringup')
-    ekf_config = os.path.join(pkg_share, 'config', 'ekf.yaml')
+    xacro_file = os.path.join(pkg_share, 'urdf', 'robot.urdf.xacro')
+    robot_description = ParameterValue(Command(['xacro ', xacro_file]), value_type=str)
 
     serial_port = LaunchConfiguration('serial_port')
     lidar_port = LaunchConfiguration('lidar_port')
+    imu_flip_z = LaunchConfiguration('imu_flip_z')
+    forward_only = LaunchConfiguration('forward_only')
+    disable_tank_turns = LaunchConfiguration('disable_tank_turns')
 
     return LaunchDescription([
-        DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB1',
+        DeclareLaunchArgument('serial_port', default_value='/dev/esp32',
                                description='ESP32 serial port'),
-        DeclareLaunchArgument('lidar_port', default_value='/dev/ttyUSB0',
+        DeclareLaunchArgument('lidar_port', default_value='/dev/rplidar',
                                description='RPLIDAR A1 serial port'),
+        DeclareLaunchArgument('imu_flip_z', default_value='false',
+                               description='Flip gyro Z sign if heading turns the wrong way'),
+        DeclareLaunchArgument('forward_only', default_value='false',
+                               description='Block reverse cmd_vel commands'),
+        DeclareLaunchArgument('disable_tank_turns', default_value='false',
+                               description='Disable in-place tank turns'),
+
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': robot_description}],
+        ),
 
         Node(
             package='robot_bringup',
@@ -25,17 +44,11 @@ def generate_launch_description():
             name='serial_bridge',
             output='screen',
             parameters=[{
-                'serial_port': serial_port,
-                'publish_tf': False,   # ekf_filter_node publishes odom->base_link instead
+                'port': serial_port,
+                'imu_flip_z': imu_flip_z,
+                'forward_only': forward_only,
+                'disable_tank_turns': disable_tank_turns,
             }],
-        ),
-
-        Node(
-            package='robot_localization',
-            executable='ekf_node',
-            name='ekf_filter_node',
-            output='screen',
-            parameters=[ekf_config],
         ),
 
         Node(
@@ -50,19 +63,5 @@ def generate_launch_description():
                 'inverted': False,
                 'angle_compensate': True,
             }],
-        ),
-
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='base_to_laser',
-            arguments=['0', '0', '0.1', '0', '0', '0', 'base_link', 'laser_frame'],
-        ),
-
-        Node(
-            package='tf2_ros',
-            executable='static_transform_publisher',
-            name='base_to_imu',
-            arguments=['0', '0', '0.05', '0', '0', '0', 'base_link', 'imu_link'],
         ),
     ])
