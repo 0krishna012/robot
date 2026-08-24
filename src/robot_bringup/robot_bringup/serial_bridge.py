@@ -10,7 +10,7 @@ import math
 import time
 
 WHEEL_RADIUS    = 0.085   # physical/CAD value -- must match robot.urdf.xacro's wheel_radius
-WHEEL_BASE      = 0.41
+WHEEL_BASE      = 0.395   # must match robot.urdf.xacro's wheel_separation
 POLE_PAIRS      = 10
 TICKS_PER_REV   = POLE_PAIRS * 6   # 60 ticks/rev (10 pole pairs * 6 Hall edges)
 METERS_PER_TICK = (2 * math.pi * WHEEL_RADIUS) / TICKS_PER_REV
@@ -31,7 +31,7 @@ class SerialBridge(Node):
         self.declare_parameter('port', '/dev/ttyUSB1')
         self.declare_parameter('baud', 115200)
         self.declare_parameter('forward_only', False)
-        self.declare_parameter('left_tick_scale', 1.0)
+        self.declare_parameter('left_tick_scale', 0.66)
         self.declare_parameter('disable_tank_turns', False)
         self.declare_parameter('imu_flip_z', False)
         port = self.get_parameter('port').value
