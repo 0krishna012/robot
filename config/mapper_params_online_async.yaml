@@ -25,14 +25,6 @@ slam_toolbox:
     use_scan_barycenter: true
     minimum_travel_distance: 0.2
     minimum_travel_heading: 0.2
-
-    # Odometry here is wheel-only (no IMU), so it drifts more under wheel
-    # slip than scan matching's default search window assumes. Widen the
-    # window so scan matching can still find the correct alignment even
-    # when odom's predicted pose is further off than usual.
-    correlation_search_space_dimension: 1.0
-    correlation_search_space_resolution: 0.01
-    correlation_search_space_smear_deviation: 0.15
     scan_buffer_size: 10
     scan_buffer_maximum_scan_distance: 12.0
     link_match_minimum_response_fine: 0.1
