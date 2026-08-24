@@ -19,9 +19,9 @@ def generate_launch_description():
     disable_tank_turns = LaunchConfiguration('disable_tank_turns')
 
     return LaunchDescription([
-        DeclareLaunchArgument('serial_port', default_value='/dev/esp32',
+        DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB1',
                                description='ESP32 serial port'),
-        DeclareLaunchArgument('lidar_port', default_value='/dev/rplidar',
+        DeclareLaunchArgument('lidar_port', default_value='/dev/ttyUSB0',
                                description='RPLIDAR A1 serial port'),
         DeclareLaunchArgument('imu_flip_z', default_value='false',
                                description='Flip gyro Z sign if heading turns the wrong way'),

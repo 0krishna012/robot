@@ -41,7 +41,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument('use_rviz', default_value='true',
+        DeclareLaunchArgument('use_rviz', default_value='false',
                                description='Launch RViz with the SLAM view'),
         bringup,
         slam_toolbox_launch,

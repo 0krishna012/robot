@@ -6,15 +6,15 @@
 # Usage:
 #   ./run_slam.sh                                 # just launch
 #   ./run_slam.sh --build                         # colcon build robot_bringup first
-#   ./run_slam.sh --serial-port=/dev/esp32 --lidar-port=/dev/rplidar
+#   ./run_slam.sh --serial-port=/dev/ttyUSB1 --lidar-port=/dev/ttyUSB0
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROS_DISTRO_SETUP="/opt/ros/humble/setup.bash"
 
 BUILD=false
-SERIAL_PORT="/dev/esp32"
-LIDAR_PORT="/dev/rplidar"
+SERIAL_PORT="/dev/ttyUSB1"
+LIDAR_PORT="/dev/ttyUSB0"
 
 for arg in "$@"; do
   case "$arg" in
