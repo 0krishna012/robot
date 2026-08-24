@@ -9,7 +9,7 @@ import serial
 import math
 import time
 
-WHEEL_RADIUS    = 0.0762
+WHEEL_RADIUS    = 0.085   # physical/CAD value -- must match robot.urdf.xacro's wheel_radius
 WHEEL_BASE      = 0.41
 POLE_PAIRS      = 10
 TICKS_PER_REV   = POLE_PAIRS * 6   # 60 ticks/rev (10 pole pairs * 6 Hall edges)
