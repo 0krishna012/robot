@@ -19,9 +19,9 @@ def generate_launch_description():
     disable_tank_turns = LaunchConfiguration('disable_tank_turns')
 
     return LaunchDescription([
-        DeclareLaunchArgument('serial_port', default_value='/dev/esp32',
+        DeclareLaunchArgument('serial_port', default_value='/dev/USB1',
                                description='ESP32 serial port'),
-        DeclareLaunchArgument('lidar_port', default_value='/dev/rplidar',
+        DeclareLaunchArgument('lidar_port', default_value='/dev/USB0',
                                description='RPLIDAR A1 serial port'),
         DeclareLaunchArgument('imu_flip_z', default_value='false',
                                description='Flip gyro Z sign if heading turns the wrong way'),
@@ -36,13 +36,6 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[{'robot_description': robot_description}],
-        ),
-
-        Node(
-            package='joint_state_publisher',
-            executable='joint_state_publisher',
-            name='joint_state_publisher',
-            output='screen',
         ),
 
         Node(

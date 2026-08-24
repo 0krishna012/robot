@@ -4,8 +4,11 @@
   <!-- All measurements below come from the robot's physical/CAD spec sheet.
        All z values are heights above base_footprint (the ground plane);
        base_link is defined to coincide with base_footprint (see joint below).
-       wheel_radius here (0.085) matches WHEEL_RADIUS in serial_bridge.py --
-       keep both in sync if the wheel is ever changed. -->
+       NOTE: wheel_radius here (0.085) is the physical/CAD value. It is
+       intentionally NOT the same as WHEEL_RADIUS in serial_bridge.py
+       (0.08255), which is used for odometry tick scaling and was left
+       untouched per instructions; the two should eventually be reconciled,
+       but that's a code change, not a URDF one. -->
 
   <!-- == Body & plates == -->
   <xacro:property name="body_length"     value="0.520"/>
