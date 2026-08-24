@@ -14,7 +14,7 @@ ROS_DISTRO_SETUP="/opt/ros/humble/setup.bash"
 
 BUILD=false
 SERIAL_PORT="/dev/esp32"
-LIDAR_PORT="/dev/rplidar"
+LIDAR_PORT="/dev/lidar"
 
 for arg in "$@"; do
   case "$arg" in
