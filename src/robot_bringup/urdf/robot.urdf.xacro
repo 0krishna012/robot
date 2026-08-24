@@ -5,7 +5,7 @@
        All z values are heights above base_footprint (the ground plane);
        base_link is defined to coincide with base_footprint (see joint below).
        NOTE: wheel_radius here (0.085) is the physical/CAD value. It is
-       intentionally NOT the same as WHEEL_RADIUS in serial_bridge_node.py
+       intentionally NOT the same as WHEEL_RADIUS in serial_bridge.py
        (0.08255), which is used for odometry tick scaling and was left
        untouched per instructions; the two should eventually be reconciled,
        but that's a code change, not a URDF one. -->
@@ -70,7 +70,7 @@
     <color rgba="0.2 0.2 0.2 1.0"/>
   </material>
 
-  <!-- base_footprint: ground-projected origin, ties to odom via serial_bridge_node's TF -->
+  <!-- base_footprint: ground-projected origin, ties to odom via serial_bridge's TF -->
   <link name="base_footprint"/>
 
   <joint name="base_footprint_to_base_link" type="fixed">
