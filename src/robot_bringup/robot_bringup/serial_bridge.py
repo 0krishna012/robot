@@ -141,7 +141,7 @@ class SerialBridge(Node):
         self._last_watchdog_stop = False
         lin = msg.linear.x
         ang = msg.angular.z
-        self.get_logger().info(f'cmd_cb: lin={lin:.3f} ang={ang:.3f}')
+        self.get_logger().info(f'/cmd_vel: lin={lin:.3f} ang={ang:.3f}')
 
         if self.forward_only and lin < 0.0:
             lin = 0.0
