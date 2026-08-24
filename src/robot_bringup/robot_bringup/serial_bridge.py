@@ -34,12 +34,14 @@ class SerialBridge(Node):
         self.declare_parameter('left_tick_scale', 0.66)
         self.declare_parameter('disable_tank_turns', False)
         self.declare_parameter('imu_flip_z', False)
+        self.declare_parameter('right_wheel_trim', 1.0)
         port = self.get_parameter('port').value
         baud = self.get_parameter('baud').value
         self.forward_only       = self.get_parameter('forward_only').value
         self.left_tick_scale    = self.get_parameter('left_tick_scale').value
         self.disable_tank_turns = self.get_parameter('disable_tank_turns').value
         self.imu_flip_z         = self.get_parameter('imu_flip_z').value
+        self.right_wheel_trim   = self.get_parameter('right_wheel_trim').value
 
         if self.forward_only:
             self.get_logger().info('forward_only=true: reverse commands blocked')
@@ -47,6 +49,8 @@ class SerialBridge(Node):
             self.get_logger().info(f'left_tick_scale={self.left_tick_scale:.3f} (odometry only)')
         if self.disable_tank_turns:
             self.get_logger().info('disable_tank_turns=true')
+        if self.right_wheel_trim != 1.0:
+            self.get_logger().info(f'right_wheel_trim={self.right_wheel_trim:.3f}')
 
         try:
             self.ser = serial.Serial(port, baud, timeout=0.05)
@@ -169,6 +173,9 @@ class SerialBridge(Node):
 
             rpm_l = self._v_to_rpm(v_l)
             rpm_r = self._v_to_rpm(v_r)
+            # Compensate for physical wheel-speed mismatch (chassis pulls to
+            # one side even on equal RPM targets) -- tune via right_wheel_trim.
+            rpm_r *= self.right_wheel_trim
 
         # Ramp through zero on direction change so ESC accepts reverse
         rpm_l = self._ramp_rpm(self._out_rpm_l, rpm_l)

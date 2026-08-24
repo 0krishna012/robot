@@ -17,6 +17,7 @@ def generate_launch_description():
     imu_flip_z = LaunchConfiguration('imu_flip_z')
     forward_only = LaunchConfiguration('forward_only')
     disable_tank_turns = LaunchConfiguration('disable_tank_turns')
+    right_wheel_trim = LaunchConfiguration('right_wheel_trim')
 
     return LaunchDescription([
         DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB1',
@@ -29,6 +30,8 @@ def generate_launch_description():
                                description='Block reverse cmd_vel commands'),
         DeclareLaunchArgument('disable_tank_turns', default_value='false',
                                description='Disable in-place tank turns'),
+        DeclareLaunchArgument('right_wheel_trim', default_value='1.0',
+                               description='Multiplier on right-wheel RPM to correct veer when driving straight'),
 
         Node(
             package='robot_state_publisher',
@@ -55,6 +58,7 @@ def generate_launch_description():
                 'imu_flip_z': imu_flip_z,
                 'forward_only': forward_only,
                 'disable_tank_turns': disable_tank_turns,
+                'right_wheel_trim': right_wheel_trim,
             }],
         ),
 
