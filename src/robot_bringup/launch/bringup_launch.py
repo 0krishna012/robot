@@ -63,6 +63,8 @@ def generate_launch_description():
             executable='rplidar_node',
             name='rplidar_node',
             output='screen',
+            respawn=True,
+            respawn_delay=2.0,
             parameters=[{
                 'serial_port': lidar_port,
                 'serial_baudrate': 115200,
