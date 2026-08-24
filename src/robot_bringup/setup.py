@@ -15,7 +15,8 @@ setup(
         # Config lives at the workspace root (../../config), not inside this
         # package, so all ROS packages in the workspace can share one place
         # for tunable yaml params.
-        (os.path.join('share', package_name, 'config'), glob('../../config/*.yaml')),
+        (os.path.join('share', package_name, 'config'),
+         glob('../../config/*.yaml') + glob('../../config/*.rviz')),
         (os.path.join('share', package_name, 'urdf'), glob('urdf/*.xacro')),
     ],
     install_requires=['setuptools'],

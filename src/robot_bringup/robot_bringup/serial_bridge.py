@@ -302,10 +302,11 @@ def main():
         try:
             node.ser.write(b"S\n")
             node.ser.flush()
-            node.destroy_node()
         except Exception:
             pass
-        rclpy.shutdown()
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':
