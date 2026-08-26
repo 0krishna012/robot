@@ -1,0 +1,8 @@
+# colcon build artifacts -- machine-specific (absolute paths, symlinks),
+# never commit these. Each machine runs its own `colcon build`.
+build/
+install/
+log/
+
+__pycache__/
+*.pyc
