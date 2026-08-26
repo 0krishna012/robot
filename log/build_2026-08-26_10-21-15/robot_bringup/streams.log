@@ -1,0 +1,25 @@
+[0.804s] Invoking command in '/home/krishna/slam_robot_ws/build/robot_bringup': PYTHONPATH=/home/krishna/slam_robot_ws/build/robot_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/krishna/slam_robot_ws/install/robot_bringup/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/krishna/slam_robot_ws/build/robot_bringup/build --no-deps symlink_data --force
+[1.002s] running develop
+[1.116s] running egg_info
+[1.117s] writing robot_bringup.egg-info/PKG-INFO
+[1.117s] writing dependency_links to robot_bringup.egg-info/dependency_links.txt
+[1.117s] writing entry points to robot_bringup.egg-info/entry_points.txt
+[1.117s] writing requirements to robot_bringup.egg-info/requires.txt
+[1.117s] writing top-level names to robot_bringup.egg-info/top_level.txt
+[1.118s] reading manifest file 'robot_bringup.egg-info/SOURCES.txt'
+[1.122s] writing manifest file 'robot_bringup.egg-info/SOURCES.txt'
+[1.123s] running build_ext
+[1.123s] Creating /home/krishna/slam_robot_ws/install/robot_bringup/lib/python3.10/site-packages/robot-bringup.egg-link (link to .)
+[1.123s] Installing serial_bridge_node script to /home/krishna/slam_robot_ws/install/robot_bringup/lib/robot_bringup
+[1.124s] Installing teleop_keyboard script to /home/krishna/slam_robot_ws/install/robot_bringup/lib/robot_bringup
+[1.124s] 
+[1.124s] Installed /home/krishna/slam_robot_ws/build/robot_bringup
+[1.124s] running symlink_data
+[1.124s] symbolically linking /home/krishna/slam_robot_ws/build/robot_bringup/resource/robot_bringup -> /home/krishna/slam_robot_ws/install/robot_bringup/share/ament_index/resource_index/packages
+[1.124s] symbolically linking /home/krishna/slam_robot_ws/build/robot_bringup/package.xml -> /home/krishna/slam_robot_ws/install/robot_bringup/share/robot_bringup
+[1.124s] symbolically linking /home/krishna/slam_robot_ws/build/robot_bringup/launch/bringup_launch.py -> /home/krishna/slam_robot_ws/install/robot_bringup/share/robot_bringup/launch
+[1.124s] symbolically linking /home/krishna/slam_robot_ws/build/robot_bringup/launch/slam_launch.py -> /home/krishna/slam_robot_ws/install/robot_bringup/share/robot_bringup/launch
+[1.124s] symbolically linking /home/krishna/slam_robot_ws/config/mapper_params_online_async.yaml -> /home/krishna/slam_robot_ws/install/robot_bringup/share/robot_bringup/config
+[1.124s] symbolically linking /home/krishna/slam_robot_ws/config/slam_view.rviz -> /home/krishna/slam_robot_ws/install/robot_bringup/share/robot_bringup/config
+[1.125s] symbolically linking /home/krishna/slam_robot_ws/build/robot_bringup/urdf/robot.urdf.xacro -> /home/krishna/slam_robot_ws/install/robot_bringup/share/robot_bringup/urdf
+[1.150s] Invoked command in '/home/krishna/slam_robot_ws/build/robot_bringup' returned '0': PYTHONPATH=/home/krishna/slam_robot_ws/build/robot_bringup/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/krishna/slam_robot_ws/install/robot_bringup/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/krishna/slam_robot_ws/build/robot_bringup/build --no-deps symlink_data --force

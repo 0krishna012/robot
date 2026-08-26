@@ -28,6 +28,7 @@ setup(
     entry_points={
         'console_scripts': [
             'serial_bridge_node = robot_bringup.serial_bridge:main',
+            'teleop_keyboard = robot_bringup.teleop_keyboard:main',
         ],
     },
 )
