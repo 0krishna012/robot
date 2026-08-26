@@ -41,6 +41,26 @@ done
 
 source "$ROS_DISTRO_SETUP"
 
+echo ">> Stopping any leftover robot processes from a previous run..."
+pkill -f "ros2 launch robot_bringup" 2>/dev/null || true
+pkill -f "serial_bridge_node" 2>/dev/null || true
+pkill -f "rplidar" 2>/dev/null || true
+pkill -f "robot_state_publisher" 2>/dev/null || true
+pkill -f "joint_state_publisher" 2>/dev/null || true
+pkill -f "async_slam_toolbox_node" 2>/dev/null || true
+pkill -f "map_server" 2>/dev/null || true
+pkill -f "amcl" 2>/dev/null || true
+pkill -f "controller_server" 2>/dev/null || true
+pkill -f "planner_server" 2>/dev/null || true
+pkill -f "smoother_server" 2>/dev/null || true
+pkill -f "behavior_server" 2>/dev/null || true
+pkill -f "bt_navigator" 2>/dev/null || true
+pkill -f "waypoint_follower" 2>/dev/null || true
+pkill -f "velocity_smoother" 2>/dev/null || true
+pkill -f "lifecycle_manager" 2>/dev/null || true
+pkill -f "rviz2" 2>/dev/null || true
+sleep 1
+
 if $BUILD; then
   echo ">> Building robot_bringup..."
   (cd "$SCRIPT_DIR" && colcon build --packages-select robot_bringup)
