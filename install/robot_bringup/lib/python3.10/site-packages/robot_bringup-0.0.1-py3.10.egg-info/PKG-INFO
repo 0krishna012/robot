@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: robot-bringup
+Version: 0.0.1
+Summary: Bringup, serial bridge, and SLAM launch files for the diff-drive hub-motor robot
+Home-page: UNKNOWN
+Maintainer: robot
+Maintainer-email: services@atsnai.com
+License: Apache-2.0
+Platform: UNKNOWN
+
+UNKNOWN
+
