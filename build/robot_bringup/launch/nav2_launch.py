@@ -1,1 +1,0 @@
-/home/krishna/slam_robot_ws/src/robot_bringup/launch/nav2_launch.py

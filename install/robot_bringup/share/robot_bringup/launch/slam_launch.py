@@ -1,1 +1,0 @@
-/home/krishna/slam_robot_ws/build/robot_bringup/launch/slam_launch.py
