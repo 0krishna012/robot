@@ -20,9 +20,9 @@ def generate_launch_description():
     right_wheel_trim = LaunchConfiguration('right_wheel_trim')
 
     return LaunchDescription([
-        DeclareLaunchArgument('serial_port', default_value='/dev/ttyUSB0',
+        DeclareLaunchArgument('serial_port', default_value='/dev/esp32',
                                description='ESP32 serial port'),
-        DeclareLaunchArgument('lidar_port', default_value='/dev/ttyUSB1',
+        DeclareLaunchArgument('lidar_port', default_value='/dev/lidar',
                                description='RPLIDAR A1 serial port'),
         DeclareLaunchArgument('imu_flip_z', default_value='false',
                                description='Flip gyro Z sign if heading turns the wrong way'),

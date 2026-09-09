@@ -13,8 +13,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROS_DISTRO_SETUP="/opt/ros/humble/setup.bash"
 
 BUILD=false
-SERIAL_PORT="/dev/ttyUSB0"
-LIDAR_PORT="/dev/ttyUSB1"
+SERIAL_PORT="/dev/esp32"
+LIDAR_PORT="/dev/lidar"
 
 for arg in "$@"; do
   case "$arg" in

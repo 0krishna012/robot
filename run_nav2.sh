@@ -17,8 +17,8 @@ ROS_DISTRO_SETUP="/opt/ros/humble/setup.bash"
 
 BUILD=false
 USE_RVIZ=false
-SERIAL_PORT="/dev/ttyUSB0"
-LIDAR_PORT="/dev/ttyUSB1"
+SERIAL_PORT="/dev/esp32"
+LIDAR_PORT="/dev/lidar"
 MAP_FILE="$SCRIPT_DIR/maps/my_map.yaml"
 
 for arg in "$@"; do
